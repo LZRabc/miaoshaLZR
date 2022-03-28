@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -87,5 +88,29 @@ public class LoginController {
             result.setStatus(ResultStatus.SUCCESS);
             return result;
         }
+    }
+    //根据token登录
+    @RequestMapping("/autoLogin")
+    @ResponseBody
+    public ResultGeekQ<loginPojo> loginByToken(HttpServletResponse response, @RequestParam("token") String token){
+        ResultGeekQ<loginPojo> result = ResultGeekQ.build();
+
+
+        MiaoshaUser user = userService.getByToken(response,token);
+        if(user==null){
+            //session error
+            result.withError(ResultStatus.FAIL.getCode(), ResultStatus.FAIL.getMessage());
+            result.setStatus(ResultStatus.FAIL);
+            return result;
+        }
+
+        loginPojo data=new loginPojo();
+        data.setToken(token);
+        data.setRealName(user.getRealName());
+        data.setUsername(user.getNickname());
+        result.setData(data);
+        result.withSuccess(ResultStatus.SUCCESS.getCode(), ResultStatus.SUCCESS.getMessage());
+        result.setStatus(ResultStatus.SUCCESS);
+        return result;
     }
 }

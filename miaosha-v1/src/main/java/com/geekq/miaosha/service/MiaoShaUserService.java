@@ -322,6 +322,7 @@ public class MiaoShaUserService {
         else {
             user =getByNickName(mobile);
         }
+        //这里抛出的异常可能出现问题
         if (user == null) {
             throw new GlobleException(MOBILE_NOT_EXIST);
         }

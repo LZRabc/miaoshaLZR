@@ -34,6 +34,7 @@ public enum ResultStatus {
     CODE_FAIL(200002, "验证码不一致!"),
 
 
+
     /**
      * check
      */
